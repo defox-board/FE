@@ -1,0 +1,16 @@
+.header {
+    background-color: #000;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-link {
+    color: #87cefa; 
+    margin-right: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .nav-link:hover {
+    color: white;
+  }
