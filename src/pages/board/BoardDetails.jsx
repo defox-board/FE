@@ -13,6 +13,8 @@ export function BoardDetails() {
   const [nextCursor, setNextCursor] = useState(null);
   const [hasNext, setHasNext] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editContent, setEditContent] = useState("");
 
   const bottomRef = useRef(null);
 
@@ -88,6 +90,71 @@ export function BoardDetails() {
     }
   };
 
+  //댓글 수정시작 버튼
+  const handleEditComment = async (commentId) => {
+    comments.forEach((c) => {
+      if (c.id === commentId) {
+        setEditingCommentId(commentId);
+        setEditContent(c.content);
+      }
+    });
+  };
+
+  //댓글 수정
+  const fetchUpdateComment = async (commentId) => {
+    try {
+      const response = await axios.put(
+        `${ViTE_BACKEND_API_BASE_URL}/comment/${commentId}`,
+        {
+          content: editContent,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
+      if (response.status === 200) {
+        alert("コメントが修正されました！");
+        setEditingCommentId(null);
+        setComments([]);
+        setNextCursor(null);
+        setHasNext(true);
+        fetchComments();
+      } else {
+        alert("コメントの修正に失敗しました。");
+      }
+    } catch (error) {
+      console.error("Error updating comment:", error);
+    }
+  };
+  //댓글 삭제
+  const fetchDeleteComment = async (commentId) => {
+    try {
+      const response = await axios.delete(
+        `${ViTE_BACKEND_API_BASE_URL}/comment/${commentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
+
+      if (response.status == 200) {
+        alert("コメントが削除されました");
+        setEditingCommentId(null);
+        setComments([]);
+        setNextCursor(null);
+        setHasNext(true);
+        fetchComments();
+      } else {
+        alert("コメントの削除に失敗しました。");
+      }
+    } catch (error) {
+      console.error("Error deleting comment", error);
+    }
+  };
+
   // 무한 스크롤 트리거
   useEffect(() => {
     if (!bottomRef.current) return;
@@ -106,6 +173,7 @@ export function BoardDetails() {
   }, [bottomRef.current, hasNext, loading]);
 
   return (
+    //게시글 상세 보기 페이지
     <div>
       <h1>Board Details Page</h1>
       <p>Board ID: {boardId}</p>
@@ -131,7 +199,6 @@ export function BoardDetails() {
         <button type="submit">コメント投稿</button>
       </form>
 
-
       <h3>コメント一覧</h3>
 
       <div>
@@ -145,10 +212,26 @@ export function BoardDetails() {
             }}
           >
             <div style={{ fontWeight: "bold" }}>{c.username}</div>
-            <div>{c.content}</div>
+            <div>
+              {editingCommentId === c.id ? (
+                <>
+                  <input
+                    type="text"
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                  />
+                  <button onClick={() => fetchUpdateComment(c.id)}>保存</button>
+                  <button onClick={() => setEditingCommentId(null)}>
+                    キャンセル
+                  </button>
+                </>
+              ) : (
+                c.content
+              )}
+            </div>
             <div>{c.createdAt}</div>
-            <button>削除</button>
-            <button>修正</button>
+            <button onClick={() => fetchDeleteComment(c.id)}>削除</button>
+            <button onClick={() => handleEditComment(c.id)}>修正</button>
           </div>
         ))}
 
