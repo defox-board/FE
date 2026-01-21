@@ -9,7 +9,7 @@ export function BoardDetails() {
   const [boardDetails, setBoardDetails] = useState(null);
   const { boardId } = useParams();
   const [comments, setComments] = useState([]);
-  const [commentInput, setCommentInput] = useState('');
+  const [commentInput, setCommentInput] = useState("");
   const [nextCursor, setNextCursor] = useState(null);
   const [hasNext, setHasNext] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -18,8 +18,7 @@ export function BoardDetails() {
 
   //최초 랜더링(게시판)
   useEffect(() => {
-
-    if(!boardId) return;  
+    if (!boardId) return;
     axios
       .get(`${ViTE_BACKEND_API_BASE_URL}/boards/${boardId}`, {
         headers: {
@@ -42,52 +41,52 @@ export function BoardDetails() {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
-      }
+      },
     );
 
+    setComments((prev) => {
+      const map = new Map(prev.map((c) => [c.id, c]));
+      response.data.data.forEach((c) => map.set(c.id, c));
+      return Array.from(map.values());
+    });
 
-    setComments(prev => [...prev, ...response.data.data]);
     setNextCursor(response.data.nextCursor);
     setHasNext(response.data.hasNext);
     setLoading(false);
-  };  
-
+  };
+  //게시판 아이디바뀔때 댓글 재조회
   useEffect(() => {
     fetchComments();
   }, [boardId]);
   //댓글 저장
-  const fetchSaveComment = async (e) => {   
-
+  const fetchSaveComment = async (e) => {
     e.preventDefault();
-    
-     try{ await axios.post(
-      `${ViTE_BACKEND_API_BASE_URL}/comment`,
-      {
-        boardId,
-        content: commentInput,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+
+    try {
+      await axios.post(
+        `${ViTE_BACKEND_API_BASE_URL}/comment`,
+        {
+          boardId,
+          content: commentInput,
         },
-      }
-    );
-    alert("コメントが投稿されました！");
-    setCommentInput('');
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
+      alert("コメントが投稿されました！");
+      setCommentInput("");
 
-setComments([]);
-setNextCursor(null);
-setHasNext(true);
+      setComments([]);
+      setNextCursor(null);
+      setHasNext(true);
 
-
-    fetchComments();
-  }
-catch(error){
-   console.error("Error saving comment:", error);
-}
-  }
-
-
+      fetchComments();
+    } catch (error) {
+      console.error("Error saving comment:", error);
+    }
+  };
 
   // 무한 스크롤 트리거
   useEffect(() => {
@@ -99,23 +98,12 @@ catch(error){
           fetchComments();
         }
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     observer.observe(bottomRef.current);
     return () => observer.disconnect();
   }, [bottomRef.current, hasNext, loading]);
-
-
-
-
-
-
-
-
-
-
-
 
   return (
     <div>
@@ -134,41 +122,39 @@ catch(error){
       )}
 
       <form onSubmit={fetchSaveComment}>
-        <input type="text" 
-        value={commentInput}
-        onChange= {(e) => setCommentInput(e.target.value)}
-        
-        placeholder="コメントを入力してください" />
+        <input
+          type="text"
+          value={commentInput}
+          onChange={(e) => setCommentInput(e.target.value)}
+          placeholder="コメントを入力してください"
+        />
         <button type="submit">コメント投稿</button>
       </form>
 
       <h3>コメント一覧</h3>
-      
-<div>
-  {/* 댓글 목록 */}
-  {comments.map((c) => (
-    <div
-      key={c.id}
-      style={{
-        borderBottom: "1px solid #ddd",
-        padding: "8px 0",
-      }}
-    >
-      <div style={{ fontWeight: "bold" }}>{c.username}</div>
-      <div>{c.content}</div>
-      <div style={{ fontSize: "12px", color: "#888" }}>
-        {c.createdAt}
+
+      <div>
+        {/* 댓글 목록 */}
+        {comments.map((c) => (
+          <div
+            key={c.id}
+            style={{
+              padding: "10px",
+              borderBottom: "1px solid #ccc",
+            }}
+          >
+            <div style={{ fontWeight: "bold" }}>{c.username}</div>
+            <div>{c.content}</div>
+            <div>{c.createdAt}</div>
+          </div>
+        ))}
+
+        {/* 로딩 표시 */}
+        {loading && <p>로딩중...</p>}
+
+        {/* 무한스크롤 트리거 */}
+        <div ref={bottomRef} />
       </div>
     </div>
-  ))}
-
-  {/* 로딩 표시 */}
-  {loading && <p>로딩중...</p>}
-
-  {/* 무한스크롤 트리거 */}
-  <div ref={bottomRef} />
-</div>
-
-    </div>
   );
-}   
+}
