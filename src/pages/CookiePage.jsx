@@ -1,22 +1,26 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 const VITE_BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
 
 
-export function CookiePage() {
+ export function CookiePage() {
+
+  console.log("🔥 CookiePage mounted");
 
   const navigate = useNavigate();
 
-  //페이지 접근시 실행 백엔드에서 리디렉션으로 여기로 보낼때 실행
+  // 페이지 접근시 실행 백엔드에서 리디렉션으로 여기로 보낼때 실행
 
   useEffect(() => {
 
     const cookieToBody = async () => {
 
       try {
-        const res = await axios.post(`${VITE_BACKEND_API_BASE_URL/jwt/exchange}`,
+        const res = await axios.post(
+          `${VITE_BACKEND_API_BASE_URL}/jwt/exchange`,
           {},
         { withCredentials: true }          
         );

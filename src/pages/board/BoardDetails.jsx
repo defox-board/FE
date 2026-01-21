@@ -131,6 +131,7 @@ export function BoardDetails() {
         <button type="submit">コメント投稿</button>
       </form>
 
+
       <h3>コメント一覧</h3>
 
       <div>
@@ -146,6 +147,8 @@ export function BoardDetails() {
             <div style={{ fontWeight: "bold" }}>{c.username}</div>
             <div>{c.content}</div>
             <div>{c.createdAt}</div>
+            <button>削除</button>
+            <button>修正</button>
           </div>
         ))}
 
