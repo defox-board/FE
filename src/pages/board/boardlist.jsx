@@ -40,7 +40,7 @@ export function BoardList() {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
-        }
+        },
       );
       if (res.status === 200) {
         // 삭제 성공 시, 해당 게시글을 boards 배열에서 제거
@@ -60,8 +60,9 @@ export function BoardList() {
         {boards.map((board) => (
           <li key={board.id}>
             <Link to={`/boards/${board.id}`}>
-              <h2>{board.title}</h2>
+              <h2>題名 : {board.title}</h2>
             </Link>
+            <div>作成者 : {board.username} </div>
             <button onClick={() => handleDeleteBoard(board.id)}>削除</button>
             <Link to={`/boards/update/${board.id}`}>
               <button>修正</button>
