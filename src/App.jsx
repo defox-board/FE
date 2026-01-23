@@ -7,6 +7,7 @@ import { BoardList } from "./pages/board/boardlist.jsx";
 import { BoardDetails } from "./pages/board/BoardDetails.jsx";
 import { BoardUpdate } from "./pages/board/BoardUpdate.jsx";
 import { CookiePage } from "./pages/CookiePage.jsx";
+import { SearchBoard } from "./pages/board/SearchBoard.jsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/cookiepage" element={<CookiePage />} />
         <Route path="/boards/:boardId" element={<BoardDetails />} />
         <Route path="/boards/update/:boardId" element={<BoardUpdate />} />
+        <Route path ="/search" element={<SearchBoard />} />
         <Route path="/" element={<h1>掲示板ホームページ</h1>} />
         
       </Routes>

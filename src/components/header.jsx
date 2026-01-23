@@ -11,7 +11,7 @@ export function Header() {
       <Link to="/login" className="nav-link">ログイン</Link> 
       <Link to="/create" className="nav-link">掲示板作成</Link>
       <Link to="/boards" className="nav-link">掲示板一覧</Link>
-
+<Link to="/search" className="nav-link">掲示板検索</Link>
       </nav>
    
   );
