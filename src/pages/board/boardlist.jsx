@@ -62,7 +62,7 @@ export function BoardList() {
             <Link to={`/boards/${board.id}`}>
               <h2>題名 : {board.title}</h2>
             </Link>
-            <div>作成者 : {board.username} </div>
+            <div>作成者 : {board.username} </div> <span></span>
             <button onClick={() => handleDeleteBoard(board.id)}>削除</button>
             <Link to={`/boards/update/${board.id}`}>
               <button>修正</button>

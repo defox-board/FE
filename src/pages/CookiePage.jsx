@@ -8,7 +8,6 @@ const VITE_BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
  export function CookiePage() {
 
-  console.log("🔥 CookiePage mounted");
 
   const navigate = useNavigate();
 
